@@ -1,5 +1,22 @@
 @echo off
 
+rem Check for administrator privileges
+if "%PROCESSOR_ARCHITECTURE%"=="x86" if not "%PROCESSOR_ARCHITEW6432%"=="" goto :UAC_CHECK
+if "%PROCESSOR_ARCHITECTURE%"=="AMD64" goto :UAC_CHECK
+:UAC_FAIL
+echo Requesting administrative privileges...
+goto :UAC_FAIL
+
+:UAC_CHECK
+net session >nul 2>&1
+if %errorlevel% == 0 (
+    goto :UAC_SUCCESS
+) else (
+    goto :UAC_FAIL
+)
+
+:UAC_SUCCESS
+
 rem Clear the browser cache
 del /f /q %temp%\*.*
 
